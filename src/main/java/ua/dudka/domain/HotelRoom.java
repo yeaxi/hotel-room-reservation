@@ -21,13 +21,20 @@ public class HotelRoom {
     private String description = "";
 
     @NonNull
-    @Setter
     private Status status = Status.FREE;
 
 
     public HotelRoom(int number, String description) {
         this.number = number;
         this.description = description;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeStatus(Status status) {
+        this.status = status;
     }
 
     public enum Status {

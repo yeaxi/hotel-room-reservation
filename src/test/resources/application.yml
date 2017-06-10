@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev, no-security
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+
+logging:
+  level: info
+
+---
+spring:
+  profiles: dev
+
+debug: true
+
+---
+spring:
+  profiles: security
+security:
+  basic:
+    enabled: true
+
+---
+spring:
+  profiles: no-security
+security:
+  basic:
+    enabled: false

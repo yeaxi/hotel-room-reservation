@@ -44,7 +44,7 @@ public class HotelRoomControllerIntegrationTest extends AbstractWebIntegrationTe
         testRooms.add(new HotelRoom());
         testRooms.add(new HotelRoom());
 
-        listWithOneRoom.add(new HotelRoom("one room"));
+        listWithOneRoom.add(new HotelRoom(0,"one room"));
 
         when(repository.findAll()).thenReturn(testRooms);
 

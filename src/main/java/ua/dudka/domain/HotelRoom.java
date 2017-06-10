@@ -15,7 +15,6 @@ public class HotelRoom {
     @Id
     private String id;
 
-    private static int numberCounter = 0;
     private int number;
 
     @NonNull
@@ -26,13 +25,12 @@ public class HotelRoom {
     private Status status = Status.FREE;
 
 
-    public HotelRoom(String description) {
+    public HotelRoom(int number, String description) {
+        this.number = number;
         this.description = description;
-        numberCounter++;
-        this.number = numberCounter;
     }
 
-    enum Status {
+    public enum Status {
         FREE, RESERVED
     }
 }

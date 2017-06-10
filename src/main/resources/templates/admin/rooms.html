@@ -60,7 +60,7 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li><a href="#">Додати кімнату</a></li>
+                            <li><a th:href="@{/admin/add-room}">Додати кімнату</a></li>
                         </ul>
                         <form th:action="@{/admin/rooms}" method="post" class="navbar-form navbar-left">
                             <div class="form-group">

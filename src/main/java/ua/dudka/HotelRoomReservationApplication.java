@@ -26,6 +26,7 @@ public class HotelRoomReservationApplication {
 
 		@Override
 		public void run(String... strings) throws Exception {
+			repository.deleteAll();
 			for (int i = 0; i < 5; i++) {
 				repository.save(new HotelRoom("room" + i));
 			}

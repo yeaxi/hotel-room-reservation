@@ -15,6 +15,9 @@ public class HotelRoom {
     @Id
     private String id;
 
+    private static int numberCounter = 0;
+    private int number;
+
     @NonNull
     private String description = "";
 
@@ -25,6 +28,8 @@ public class HotelRoom {
 
     public HotelRoom(String description) {
         this.description = description;
+        numberCounter++;
+        this.number = numberCounter;
     }
 
     enum Status {

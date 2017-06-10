@@ -62,18 +62,20 @@
                         <ul class="nav navbar-nav">
                             <li><a href="#">Додати кімнату</a></li>
                         </ul>
-                        <form class="navbar-form navbar-left">
+                        <form th:action="@{/admin/rooms}" method="post" class="navbar-form navbar-left">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
+                                <input type="number" name="number" class="form-control" placeholder="Номер кімнати">
                             </div>
-                            <button type="submit" class="btn btn-default">Знайти за номером</button>
+                            <button type="submit" class="btn btn-default">Знайти</button>
                         </form>
+                        <a th:href="@{/admin/rooms}"><span class="glyphicon glyphicon-remove"></span></a>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>
 
-            <h2 class="sub-header">Rooms</h2>
+            <h2 class="sub-header">Кімнати</h2>
             <div class="table-responsive">
+                <div th:if="${error}">Кімнату з введеним номером не знайдено!</div>
                 <table id="transactions_table" class="table table-striped">
                     <thead>
                     <tr>
@@ -90,7 +92,7 @@
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>
                         </td>
-                        <td th:text="*{id}"></td>
+                        <td th:text="*{number}"></td>
                         <td th:text="*{status}"></td>
                         <td th:text="*{description}"></td>
                     </tr>

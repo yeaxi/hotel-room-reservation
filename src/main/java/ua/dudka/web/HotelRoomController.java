@@ -25,6 +25,6 @@ public class HotelRoomController {
 
 
     public static class Links {
-        public static final String ROOM_PAGE_URL = "/rooms";
+        public static final String ROOM_PAGE_URL = "/admin/rooms";
     }
 }

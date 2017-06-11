@@ -1,11 +1,12 @@
 package ua.dudka.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ua.dudka.exception.HotelRoomAlreadyExistsException;
 import ua.dudka.service.AddHotelRoomService;
 import ua.dudka.web.dto.AddHotelRoomRequest;
@@ -18,6 +19,7 @@ import static ua.dudka.web.AddHotelRoomController.Links.ADD_ROOM_URL;
  */
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class AddHotelRoomController {
 
     private final AddHotelRoomService addHotelRoomService;
@@ -28,17 +30,26 @@ public class AddHotelRoomController {
     }
 
     @PostMapping(ADD_ROOM_URL)
-    public String addRoom(@RequestParam int number,
-                          @RequestParam String description,
+    public String addRoom(
+            @ModelAttribute AddHotelRoomRequest request,
                           Model model) {
-        AddHotelRoomRequest request = new AddHotelRoomRequest(number, description);
         try {
-            addHotelRoomService.add(request);
-            model.addAttribute("success", "");
+            processRequest(request, model);
         } catch (HotelRoomAlreadyExistsException e) {
-            model.addAttribute("error", e.getMessage());
+            handleError(model, e);
         }
         return ADD_ROOM_PAGE_URL;
+    }
+
+    private void processRequest(@ModelAttribute AddHotelRoomRequest request, Model model) {
+        log.info("processing request: #{}", request);
+        addHotelRoomService.add(request);
+        model.addAttribute("success", "");
+    }
+
+    private void handleError(Model model, HotelRoomAlreadyExistsException e) {
+        model.addAttribute("error", e.getMessage());
+        log.warn("handling error %s", e.getMessage());
     }
 
     public static class Links {

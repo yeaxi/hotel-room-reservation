@@ -7,4 +7,6 @@ import ua.dudka.web.dto.EditHotelRoomRequest;
  */
 public interface HotelRoomEditor {
     void edit(EditHotelRoomRequest request);
+
+    void release(String hotelRoomId);
 }

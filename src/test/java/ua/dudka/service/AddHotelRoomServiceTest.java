@@ -9,6 +9,7 @@ import ua.dudka.repository.HotelRoomRepository;
 import ua.dudka.service.impl.AddHotelRoomServiceImpl;
 import ua.dudka.web.dto.AddHotelRoomRequest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class AddHotelRoomServiceTest {
 
     private static HotelRoomRepository repository;
     private static AddHotelRoomService addHotelRoomService;
+    private AddHotelRoomRequest request;
 
     @Before
     public void setUp() throws Exception {
@@ -41,17 +43,35 @@ public class AddHotelRoomServiceTest {
 
     @Test
     public void addShouldSaveCreatedHotelRoomToRepository() throws Exception {
-        AddHotelRoomRequest request = new AddHotelRoomRequest(NON_EXISTENT_ROOM_NUMBER, "description");
+        int roomNumber = NON_EXISTENT_ROOM_NUMBER;
+        request = buildRequest(roomNumber);
 
         addHotelRoomService.add(request);
 
-        verify(repository).save(eq(new HotelRoom(request.getHotelRoomNumber(), request.getDescription())));
+        HotelRoom room = getHotelRoom();
+        verify(repository).save(eq(room));
+    }
+
+    private HotelRoom getHotelRoom() {
+        int roomNumber = request.getHotelRoomNumber();
+        int roomAmount = request.getRoomAmount();
+        BigDecimal price = request.getPrice();
+        String description = request.getDescription();
+
+        return new HotelRoom(roomNumber, roomAmount, price, description);
     }
 
     @Test(expected = HotelRoomAlreadyExistsException.class)
     public void addShouldThrowExceptionInCaseOfExistentRoomNumber() throws Exception {
-        AddHotelRoomRequest request = new AddHotelRoomRequest(EXISTENT_ROOM_NUMBER, "description");
+        int roomNumber = EXISTENT_ROOM_NUMBER;
+        request = buildRequest(roomNumber);
 
         addHotelRoomService.add(request);
+    }
+
+    private AddHotelRoomRequest buildRequest(int roomNumber) {
+        int roomAmount = 1;
+        BigDecimal price = BigDecimal.TEN;
+        return new AddHotelRoomRequest(roomNumber, "description", roomAmount, price);
     }
 }

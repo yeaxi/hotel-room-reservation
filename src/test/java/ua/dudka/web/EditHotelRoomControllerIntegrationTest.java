@@ -13,6 +13,7 @@ import ua.dudka.service.HotelRoomEditor;
 import ua.dudka.service.HotelRoomRemover;
 import ua.dudka.web.dto.EditHotelRoomRequest;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.mockito.Matchers.eq;
@@ -20,7 +21,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.dudka.domain.HotelRoom.Status.BOOKED;
 import static ua.dudka.web.EditHotelRoomController.Links.*;
 import static ua.dudka.web.HotelRoomController.Links.ROOM_PAGE_URL;
 
@@ -48,6 +48,11 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
 
     @Before
     public void setUp() throws Exception {
+        setUpMockRepository();
+        setUpRequest();
+    }
+
+    private void setUpMockRepository() {
         HotelRoom hotelRoom = new HotelRoom(10, "desc");
 
         when(repository.findById(eq(EXISTENT_ROOM_ID))).thenReturn(Optional.of(hotelRoom));
@@ -55,8 +60,10 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
         when(repository.findById(eq(RESERVED_ROOM_ID))).thenReturn(Optional.of(hotelRoom));
 
         doThrow(new HotelRoomBookedException()).when(hotelRoomRemover).remove(eq(RESERVED_ROOM_ID));
+    }
 
-        editHotelRoomRequest = new EditHotelRoomRequest(EXISTENT_ROOM_ID, "description", BOOKED);
+    private void setUpRequest() {
+        editHotelRoomRequest = new EditHotelRoomRequest(EXISTENT_ROOM_ID, BigDecimal.TEN, "description");
     }
 
     @Test
@@ -78,11 +85,11 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
 
 
     @Test
-    public void editExistentRoomShouldOK() throws Exception {
+    public void editRoomShouldOK() throws Exception {
         mockMvc.perform(post(EDIT_ROOM_URL)
-                .param("id", EXISTENT_ROOM_ID)
+                .param("roomId", EXISTENT_ROOM_ID)
+                .param("price", editHotelRoomRequest.getPrice().toString())
                 .param("description", editHotelRoomRequest.getDescription())
-                .param("status", editHotelRoomRequest.getStatus().toString())
                 .accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(RESPONSE_HTML_CONTENT_TYPE))
@@ -90,6 +97,19 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
                 .andExpect(model().attributeExists("success"));
 
         verify(hotelRoomEditor).edit(eq(editHotelRoomRequest));
+    }
+
+    @Test
+    public void releaseRoomShouldOK() throws Exception {
+        mockMvc.perform(post(RELEASE_ROOM_URL)
+                .param("id", EXISTENT_ROOM_ID)
+                .accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(RESPONSE_HTML_CONTENT_TYPE))
+                .andExpect(model().hasNoErrors())
+                .andExpect(model().attributeExists("success"));
+
+        verify(hotelRoomEditor).release(eq(EXISTENT_ROOM_ID));
     }
 
 

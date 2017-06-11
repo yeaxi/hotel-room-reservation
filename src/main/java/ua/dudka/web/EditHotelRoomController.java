@@ -1,12 +1,10 @@
 package ua.dudka.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.dudka.domain.HotelRoom;
 import ua.dudka.exception.HotelRoomBookedException;
 import ua.dudka.repository.HotelRoomRepository;
@@ -24,6 +22,7 @@ import static ua.dudka.web.HotelRoomController.Links.ROOM_PAGE_URL;
  */
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class EditHotelRoomController {
 
     private final HotelRoomRepository repository;
@@ -56,17 +55,28 @@ public class EditHotelRoomController {
 
     @PostMapping(EDIT_ROOM_URL)
     public String editRoom(
-            @RequestParam String id,
-            @RequestParam String description,
-            @RequestParam HotelRoom.Status status,
+            @ModelAttribute EditHotelRoomRequest request,
             Model model
     ) {
-        processEditRoom(id, description, status, model);
+        processEditRoom(request, model);
+        return setRoomToModelAndReturnEditPage(request.getRoomId(), model);
+    }
+
+    private void processEditRoom(EditHotelRoomRequest request, Model model) {
+        log.info("processing request: {}", request);
+        editor.edit(request);
+        model.addAttribute("success", "");
+    }
+
+    @PostMapping(RELEASE_ROOM_URL)
+    public String releaseRoom(@RequestParam String id, Model model) {
+        processReleaseRoom(id, model);
         return setRoomToModelAndReturnEditPage(id, model);
     }
 
-    private void processEditRoom(String id, String description, HotelRoom.Status status, Model model) {
-        editor.edit(new EditHotelRoomRequest(id, description, status));
+    private void processReleaseRoom(String id, Model model) {
+        log.info("releasing room with id: {}", id);
+        editor.release(id);
         model.addAttribute("success", "");
     }
 
@@ -92,6 +102,7 @@ public class EditHotelRoomController {
     public static class Links {
         public static final String EDIT_ROOM_PAGE_URL = "/admin/edit-room/{id}";
         public static final String EDIT_ROOM_URL = "/admin/edit-room/send";
+        public static final String RELEASE_ROOM_URL = "/admin/release-room/send";
         public static final String REMOVE_ROOM_URL = "/admin/remove-room/send";
     }
 }

@@ -18,15 +18,25 @@ public class HotelRoomEditorImpl implements HotelRoomEditor {
 
     @Override
     public void edit(EditHotelRoomRequest request) {
-        HotelRoom room = findHotelRoom(request.getRoomId());
-
-        room.changeDescription(request.getDescription());
-        room.changeStatus(request.getStatus());
-
+        HotelRoom room = findHotelRoomOrThrowException(request.getRoomId());
+        editRoom(request, room);
         repository.save(room);
     }
 
-    private HotelRoom findHotelRoom(String roomId) {
+    private void editRoom(EditHotelRoomRequest request, HotelRoom room) {
+        room.setDescription(request.getDescription());
+        room.setPrice(request.getPrice());
+    }
+
+    private HotelRoom findHotelRoomOrThrowException(String roomId) {
         return repository.findById(roomId).orElseThrow(HotelRoomNotFoundException::new);
+    }
+
+    @Override
+    public void release(String hotelRoomId) {
+        HotelRoom room = findHotelRoomOrThrowException(hotelRoomId);
+
+        room.release();
+        repository.save(room);
     }
 }

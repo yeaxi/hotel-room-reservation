@@ -10,6 +10,8 @@ import ua.dudka.exception.HotelRoomAlreadyExistsException;
 import ua.dudka.service.AddHotelRoomService;
 import ua.dudka.web.dto.AddHotelRoomRequest;
 
+import java.math.BigDecimal;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -26,9 +28,9 @@ import static ua.dudka.web.AddHotelRoomController.Links.ADD_ROOM_URL;
 public class AddHotelRoomControllerIntegrationTest extends AbstractWebIntegrationTest {
 
     private static final int EXISTENT_ROOM_NUMBER = 105;
-    private static final int NON_EXISTENT_ROOM_NUMBER = 404;
+    private static final int ROOM_NUMBER = 404;
 
-    private static AddHotelRoomRequest requestWithNonexistentNumber;
+    private static AddHotelRoomRequest request;
     private static AddHotelRoomRequest requestWithExistentNumber;
 
     @MockBean
@@ -37,10 +39,20 @@ public class AddHotelRoomControllerIntegrationTest extends AbstractWebIntegratio
 
     @Before
     public void setUp() throws Exception {
+        setUpRequests();
+        setUpService();
+    }
 
-        requestWithNonexistentNumber = new AddHotelRoomRequest(NON_EXISTENT_ROOM_NUMBER, "description");
-        requestWithExistentNumber = new AddHotelRoomRequest(EXISTENT_ROOM_NUMBER, "description");
+    private void setUpRequests() {
+        int roomAmount = 1;
+        BigDecimal price = BigDecimal.TEN;
+        String description = "description";
+        request = new AddHotelRoomRequest(ROOM_NUMBER, description, roomAmount, price);
 
+        requestWithExistentNumber = new AddHotelRoomRequest(EXISTENT_ROOM_NUMBER, description, roomAmount, price);
+    }
+
+    private void setUpService() {
         doThrow(new HotelRoomAlreadyExistsException("room with that number is already exists!"))
                 .when(addHotelRoomService).add(eq(requestWithExistentNumber));
     }
@@ -57,23 +69,27 @@ public class AddHotelRoomControllerIntegrationTest extends AbstractWebIntegratio
     @Test
     public void addRoomWithNonexistentNumberShouldOK() throws Exception {
         mockMvc.perform(post(ADD_ROOM_URL)
-                .param("number", requestWithNonexistentNumber.getHotelRoomNumber() + "")
-                .param("description", requestWithNonexistentNumber.getDescription())
+                .param("hotelRoomNumber", request.getHotelRoomNumber() + "")
+                .param("description", request.getDescription())
+                .param("roomAmount", request.getRoomAmount() + "")
+                .param("price", request.getPrice().toString())
                 .accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(RESPONSE_HTML_CONTENT_TYPE))
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attributeExists("success"));
 
-        verify(addHotelRoomService).add(eq(requestWithNonexistentNumber));
+        verify(addHotelRoomService).add(eq(request));
     }
 
     @Test
     public void addRoomWithExistentNumberShouldSetErrorToModel() throws Exception {
 
         mockMvc.perform(post(ADD_ROOM_URL)
-                .param("number", requestWithExistentNumber.getHotelRoomNumber() + "")
+                .param("hotelRoomNumber", requestWithExistentNumber.getHotelRoomNumber() + "")
                 .param("description", requestWithExistentNumber.getDescription())
+                .param("roomAmount", requestWithExistentNumber.getRoomAmount() + "")
+                .param("price", requestWithExistentNumber.getPrice().toString())
                 .accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(RESPONSE_HTML_CONTENT_TYPE))

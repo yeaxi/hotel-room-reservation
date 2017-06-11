@@ -7,6 +7,9 @@ spring:
   thymeleaf:
     mode: LEGACYHTML5
     cache: false
+  data:
+    mongodb:
+      database: hotel-room-reservation
 
 logging:
   level: info

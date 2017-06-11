@@ -8,6 +8,7 @@ import ua.dudka.repository.HotelRoomRepository;
 import ua.dudka.service.AddHotelRoomService;
 import ua.dudka.web.dto.AddHotelRoomRequest;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -20,9 +21,9 @@ public class AddHotelRoomServiceImpl implements AddHotelRoomService {
     private final HotelRoomRepository repository;
 
     @Override
-    public void add(AddHotelRoomRequest addHotelRoomRequest) {
-        checkForExistentHotelRoom(addHotelRoomRequest);
-        HotelRoom hotelRoom = createHotelRoom(addHotelRoomRequest);
+    public void add(AddHotelRoomRequest request) {
+        checkForExistentHotelRoom(request);
+        HotelRoom hotelRoom = createHotelRoom(request);
         repository.save(hotelRoom);
     }
 
@@ -37,7 +38,10 @@ public class AddHotelRoomServiceImpl implements AddHotelRoomService {
 
     private HotelRoom createHotelRoom(AddHotelRoomRequest request) {
         int number = request.getHotelRoomNumber();
+        int roomAmount = request.getRoomAmount();
+        BigDecimal price = request.getPrice();
         String description = request.getDescription();
-        return new HotelRoom(number, description);
+
+        return new HotelRoom(number, roomAmount, price, description);
     }
 }

@@ -63,38 +63,33 @@
                                 </li>
                                 <li class="list-group-item">
                                     <p th:text="'Статус : '+ *{status}">Статус: Вільна</p>
+                                    <p th:text="'Кількість кімнат : '+ *{roomAmount}">Кількість кімнат: 2</p>
+                                    <p th:text="'Вартість за ніч : '+ *{price}">Вартість: 1200</p>
                                     <p th:text="'Опис: '+ *{description}">Опис: класна кімната</p>
                                 </li>
                             </ul>
                         </div><!-- /.col-lg-6 -->
 
 
+                        <!--edit room-->
                         <form action="#" th:action="@{/admin/edit-room/send}" method="post">
 
-                            <input type="hidden" th:value="*{id}" name="id">
+                            <input type="hidden" th:value="*{id}" name="roomId">
                             <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <label for="price">Нова ціна:</label>
+                                            <input type="number" id="price" name="price">
+                                        </div><!-- /input-group -->
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="input-group">
                                             <label for="description">Новий опис :</label>
                                             <textarea id="description" name="description"></textarea>
                                         </div><!-- /input-group -->
-
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="input-group">
-                                            <label for="status">Новий статус :</label>
-                                            <select id="status" name="status">
-                                                <option
-                                                        th:each="status : ${T(ua.dudka.domain.HotelRoom.Status).values()}"
-                                                        th:value="${status}"
-                                                        th:text="${status}">
-                                                </option>
-                                            </select>
-                                        </div><!-- /input-group -->
-
                                     </div>
                                 </div>
                                 <div class="row">
@@ -103,7 +98,7 @@
                                             <div class=" btn-submit-transfer btn-group btn-group-justified"
                                                  role="group">
                                                 <div class="btn-group" role="group">
-                                                    <button type="submit" class="btn btn-primary">Змінити статус
+                                                    <button type="submit" class="btn btn-primary">Змінити дані
                                                     </button>
                                                 </div>
                                             </div>
@@ -111,21 +106,52 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </form><!--/edit room-->
+
                     </div><!-- /.row -->
+
                     <div class="row">
-                        <div class="col-lg-4">
                             <form action="#" th:action="@{/admin/remove-room/send}" method="post">
                                 <input type="hidden" th:value="*{id}" name="id">
-                                <div class="input-group">
-                                    <div class="btn-group btn-group-justified" role="group">
-                                        <div class="btn-group btn-group-justified" role="group">
-                                            <button type="submit" class="btn btn-danger">Видалити кімнату</button>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="input-group">
+                                                <div class=" btn-submit-transfer btn-group btn-group-justified"
+                                                     role="group">
+                                                    <div class="btn-group" role="group">
+                                                        <button type="submit" class="btn btn-danger">
+                                                            Видалити кімнату
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                        </div>
+                        <!--release room-->
+                        <th:block th:if="*{status == T(ua.dudka.domain.HotelRoom.Status).BOOKED}">
+                            <form action="#" th:action="@{/admin/release-room/send}" method="post">
+                                <input type="hidden" th:value="*{id}" name="id">
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="input-group">
+                                                <div class=" btn-submit-transfer btn-group btn-group-justified"
+                                                     role="group">
+                                                    <div class="btn-group" role="group">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Звільнити кімнату
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form><!--/release room-->
+                        </th:block>
                     </div>
                 </div><!--/.panel body-->
 

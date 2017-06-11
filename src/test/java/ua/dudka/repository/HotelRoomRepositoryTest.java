@@ -64,7 +64,7 @@ public class HotelRoomRepositoryTest extends AbstractRepositoryTest {
 
     @Test
     public void hotelRoomShouldBeUpdated() throws Exception {
-        Status expectedStatus = Status.RESERVED;
+        Status expectedStatus = Status.BOOKED;
         testRoom.changeStatus(expectedStatus);
 
         HotelRoom updatedRoom = repository.save(testRoom);

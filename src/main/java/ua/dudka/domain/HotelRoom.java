@@ -37,7 +37,15 @@ public class HotelRoom {
         this.status = status;
     }
 
+    public void book() {
+        this.status = Status.BOOKED;
+    }
+
+    public boolean isBooked() {
+        return this.status.equals(Status.BOOKED);
+    }
+
     public enum Status {
-        FREE, RESERVED
+        FREE, BOOKED
     }
 }

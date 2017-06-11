@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static ua.dudka.domain.HotelRoom.Status.RESERVED;
+import static ua.dudka.domain.HotelRoom.Status.BOOKED;
 
 /**
  * @author Rostislav Dudka
@@ -40,7 +40,7 @@ public class HotelRoomEditorTest {
 
     @Test
     public void editShouldUpdateHotelRoomInfoAndSaveToRepository() throws Exception {
-        EditHotelRoomRequest request = new EditHotelRoomRequest(EXISTENT_ROOM_ID, "new description", RESERVED);
+        EditHotelRoomRequest request = new EditHotelRoomRequest(EXISTENT_ROOM_ID, "new description", BOOKED);
 
         editor.edit(request);
 
@@ -49,7 +49,7 @@ public class HotelRoomEditorTest {
 
     @Test(expected = HotelRoomNotFoundException.class)
     public void editShouldThrowHotelRoomNotFoundExceptionInCaseOfNonexistentId() throws Exception {
-        EditHotelRoomRequest request = new EditHotelRoomRequest(NONEXISTENT_ROOM_ID, "desc", RESERVED);
+        EditHotelRoomRequest request = new EditHotelRoomRequest(NONEXISTENT_ROOM_ID, "desc", BOOKED);
 
         editor.edit(request);
     }

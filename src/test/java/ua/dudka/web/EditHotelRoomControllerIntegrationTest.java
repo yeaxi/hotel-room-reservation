@@ -7,21 +7,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import ua.dudka.domain.HotelRoom;
+import ua.dudka.exception.HotelRoomBookedException;
 import ua.dudka.repository.HotelRoomRepository;
 import ua.dudka.service.HotelRoomEditor;
+import ua.dudka.service.HotelRoomRemover;
 import ua.dudka.web.dto.EditHotelRoomRequest;
 
 import java.util.Optional;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.dudka.domain.HotelRoom.Status.RESERVED;
-import static ua.dudka.web.EditHotelRoomController.Links.EDIT_ROOM_PAGE_URL;
-import static ua.dudka.web.EditHotelRoomController.Links.EDIT_ROOM_URL;
+import static ua.dudka.domain.HotelRoom.Status.BOOKED;
+import static ua.dudka.web.EditHotelRoomController.Links.*;
 import static ua.dudka.web.HotelRoomController.Links.ROOM_PAGE_URL;
 
 /**
@@ -31,6 +31,7 @@ import static ua.dudka.web.HotelRoomController.Links.ROOM_PAGE_URL;
 public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrationTest {
 
     private static final String EXISTENT_ROOM_ID = "105";
+    private static final String RESERVED_ROOM_ID = "405";
     private static final String NONEXISTENT_ROOM_ID = "404";
 
     private static EditHotelRoomRequest editHotelRoomRequest;
@@ -41,6 +42,9 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
     @MockBean
     private HotelRoomEditor hotelRoomEditor;
 
+    @MockBean
+    private HotelRoomRemover hotelRoomRemover;
+
 
     @Before
     public void setUp() throws Exception {
@@ -48,8 +52,11 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
 
         when(repository.findById(eq(EXISTENT_ROOM_ID))).thenReturn(Optional.of(hotelRoom));
         when(repository.findById(eq(NONEXISTENT_ROOM_ID))).thenReturn(Optional.empty());
+        when(repository.findById(eq(RESERVED_ROOM_ID))).thenReturn(Optional.of(hotelRoom));
 
-        editHotelRoomRequest = new EditHotelRoomRequest(EXISTENT_ROOM_ID, "description", RESERVED);
+        doThrow(new HotelRoomBookedException()).when(hotelRoomRemover).remove(eq(RESERVED_ROOM_ID));
+
+        editHotelRoomRequest = new EditHotelRoomRequest(EXISTENT_ROOM_ID, "description", BOOKED);
     }
 
     @Test
@@ -83,5 +90,30 @@ public class EditHotelRoomControllerIntegrationTest extends AbstractWebIntegrati
                 .andExpect(model().attributeExists("success"));
 
         verify(hotelRoomEditor).edit(eq(editHotelRoomRequest));
+    }
+
+
+    @Test
+    public void removeFreeRoomShouldOK() throws Exception {
+        mockMvc.perform(post(REMOVE_ROOM_URL)
+                .param("id", EXISTENT_ROOM_ID)
+                .accept(MediaType.TEXT_HTML))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(ROOM_PAGE_URL));
+
+        verify(hotelRoomRemover).remove(eq(EXISTENT_ROOM_ID));
+    }
+
+    @Test
+    public void removeReservedRoomShouldSetErrorToModel() throws Exception {
+        mockMvc.perform(post(REMOVE_ROOM_URL)
+                .param("id", RESERVED_ROOM_ID)
+                .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(RESPONSE_HTML_CONTENT_TYPE))
+                .andExpect(model().hasNoErrors())
+                .andExpect(model().attributeExists("error"));
+
+        verify(hotelRoomRemover).remove(eq(RESERVED_ROOM_ID));
     }
 }

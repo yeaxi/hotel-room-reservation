@@ -28,7 +28,11 @@ public class HotelRoomReservationApplication {
 		public void run(String... strings) throws Exception {
 			repository.deleteAll();
 			for (int i = 0; i < 5; i++) {
-				repository.save(new HotelRoom(i, "room" + i));
+				HotelRoom s = new HotelRoom(i, "room" + i);
+				if (i % 2 == 0) {
+					s.book();
+				}
+				repository.save(s);
 			}
 		}
 	}

@@ -13,4 +13,6 @@ public interface HotelRoomRepository extends MongoRepository<HotelRoom, String> 
     List<HotelRoom> findByNumber(int number);
 
     Optional<HotelRoom> findById(String id);
+
+    List<HotelRoom> findByStatus(HotelRoom.Status status);
 }

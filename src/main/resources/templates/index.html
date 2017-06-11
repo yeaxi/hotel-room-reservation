@@ -84,6 +84,8 @@
                         <th></th>
                         <th>Номер кімнати</th>
                         <th>Статус</th>
+                        <th>Кількість кімнат у номері</th>
+                        <th>Вартість за ніч</th>
                         <th>Опис</th>
                     </tr>
                     </thead>
@@ -96,6 +98,8 @@
                         </td>
                         <td th:text="*{number}"></td>
                         <td th:text="*{status}"></td>
+                        <td th:text="*{roomAmount}"></td>
+                        <td th:text="*{price}"></td>
                         <td th:text="*{description}"></td>
                     </tr>
                     </tbody>

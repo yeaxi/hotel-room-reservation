@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ua.dudka.domain.HotelRoom;
-import ua.dudka.repository.HotelRoomRepository;
+import ua.dudka.domain.room.HotelRoom;
+import ua.dudka.repository.room.HotelRoomRepository;
 
 import java.util.List;
 

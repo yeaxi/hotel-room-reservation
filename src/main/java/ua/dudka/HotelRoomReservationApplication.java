@@ -6,8 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ua.dudka.domain.HotelRoom;
-import ua.dudka.repository.HotelRoomRepository;
+import ua.dudka.domain.room.HotelRoom;
+import ua.dudka.repository.room.HotelRoomRepository;
 
 @SpringBootApplication
 public class HotelRoomReservationApplication {

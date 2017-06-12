@@ -1,9 +1,6 @@
 package ua.dudka.domain.booking;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import java.time.Duration;
@@ -19,6 +16,7 @@ import static lombok.AccessLevel.PACKAGE;
 @AllArgsConstructor(access = PACKAGE)
 @Data
 @Builder
+@EqualsAndHashCode(exclude = "creationDate")
 public class BookingRequest {
 
     @Id
@@ -26,6 +24,7 @@ public class BookingRequest {
 
     private Customer customer;
 
+    private LocalDateTime creationDate;
     private LocalDate arriveDate;
 
     private long tenure;
@@ -58,20 +57,30 @@ public class BookingRequest {
 
 
     public static class BookingRequestBuilder {
+        private Customer customer = new Customer();
+
+        private LocalDate arriveDate = LocalDate.now();
+
+        private LocalDate departureDate = LocalDate.now();
+
+        private HotelRoomPreferences preferences = new HotelRoomPreferences();
+
+        private PaymentType paymentType = PaymentType.CASH;
+
+        private RequestStatus status = RequestStatus.CREATED;
 
         public BookingRequest build() {
-            String id = "";
             long tenure = createTenure();
-            RequestStatus status = RequestStatus.CREATED;
+            LocalDateTime creationDate = LocalDateTime.now();
 
-            return new BookingRequest(id,this.customer, this.arriveDate, tenure, this.departureDate,
-                    this.preferences, this.personAmount, this.paymentType, status);
+            return new BookingRequest(null, this.customer, creationDate,
+                    this.arriveDate, tenure, this.departureDate,
+                    this.preferences, this.personAmount, this.paymentType, this.status);
         }
-
         private long createTenure() {
             //convert to LocalDateTime because Duration.between() doesn't work with LocalDate
             LocalDateTime from = this.arriveDate.atStartOfDay();
-            LocalDateTime to = departureDate.atStartOfDay();
+            LocalDateTime to = this.departureDate.atStartOfDay();
             return Duration.between(from, to).toDays();
         }
     }

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ua.dudka.service.booking.BookingRequestCreator;
 import ua.dudka.web.booking.dto.CreateBookingRequestDTO;
 
-import static ua.dudka.web.booking.BookingRequestController.Links.CREATE_BOOKING_REQUEST_PAGE_URL;
-import static ua.dudka.web.booking.BookingRequestController.Links.CREATE_BOOKING_REQUEST_URL;
+import static ua.dudka.web.booking.CreateBookingRequestController.Links.CREATE_BOOKING_REQUEST_PAGE_URL;
+import static ua.dudka.web.booking.CreateBookingRequestController.Links.CREATE_BOOKING_REQUEST_URL;
 
 /**
  * @author Rostislav Dudka
@@ -19,7 +19,7 @@ import static ua.dudka.web.booking.BookingRequestController.Links.CREATE_BOOKING
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class BookingRequestController {
+public class CreateBookingRequestController {
 
     private final BookingRequestCreator creator;
 

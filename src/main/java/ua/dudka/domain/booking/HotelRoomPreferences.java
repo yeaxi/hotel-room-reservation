@@ -7,6 +7,8 @@ import ua.dudka.domain.HotelRoomType;
 
 import java.math.BigDecimal;
 
+import static ua.dudka.domain.HotelRoomType.ONE_ROOM;
+
 /**
  * @author Rostislav Dudka
  */
@@ -15,8 +17,8 @@ import java.math.BigDecimal;
 @Data
 public class HotelRoomPreferences {
 
-    private HotelRoomType roomType;
-    private int hotelRoomAmount;
-    private BigDecimal fromPrice;
-    private BigDecimal toPrice;
+    private HotelRoomType roomType = ONE_ROOM;
+    private int hotelRoomAmount = 1;
+    private BigDecimal fromPrice = BigDecimal.ONE;
+    private BigDecimal toPrice = BigDecimal.valueOf(100_000);
 }

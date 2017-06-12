@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import ua.dudka.domain.booking.Customer;
 import ua.dudka.domain.booking.HotelRoomPreferences;
 import ua.dudka.service.booking.BookingRequestCreator;
-import ua.dudka.web.booking.BookingRequestController;
 import ua.dudka.web.booking.dto.CreateBookingRequestDTO;
 
 import java.time.LocalDate;
@@ -23,14 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.dudka.domain.booking.BookingRequest.PaymentType;
 import static ua.dudka.domain.HotelRoomType.ONE_ROOM;
-import static ua.dudka.web.booking.BookingRequestController.Links.CREATE_BOOKING_REQUEST_PAGE_URL;
-import static ua.dudka.web.booking.BookingRequestController.Links.CREATE_BOOKING_REQUEST_URL;
+import static ua.dudka.web.booking.CreateBookingRequestController.Links.CREATE_BOOKING_REQUEST_PAGE_URL;
+import static ua.dudka.web.booking.CreateBookingRequestController.Links.CREATE_BOOKING_REQUEST_URL;
 
 /**
  * @author Rostislav Dudka
  */
-@WebMvcTest(controllers = BookingRequestController.class, secure = false)
-public class BookingRequestControllerIntegrationTest extends AbstractWebIntegrationTest {
+@WebMvcTest(controllers = CreateBookingRequestController.class, secure = false)
+public class CreateBookingRequestControllerIntegrationTest extends AbstractWebIntegrationTest {
 
     private static CreateBookingRequestDTO request;
 

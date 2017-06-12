@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Customer {
 
-    private String name;
-    private String surname;
-    private String phoneNumber;
+    private String name = "";
+    private String surname =  "";
+    private String phoneNumber = "";
 
 }

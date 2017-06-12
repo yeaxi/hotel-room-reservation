@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Запити на бронювання</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/admin/admin.css}" href="../../static/css/admin/admin.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body th:inline="text">
+
+<!--header-->
+<div th:replace="/admin/component/header ::entry"></div>
+<!--end-header-->
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!--left-nav-menu-->
+        <div th:replace="/admin/component/left-nav-menu ::entry"></div>
+        <!--end left-nav-menu-->
+
+        <!--main-->
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <h1 class="page-header">Пошук</h1>
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#"></a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests}">Всі запити</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests?status=CREATED}">Тільки створені</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests?status=APPROVED}">Тільки підтверджені</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests?status=DENIED}">Тільки відхилені</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+
+            <h2 class="sub-header">Запити на бронювання</h2>
+            <div class="table-responsive">
+                <table id="transactions_table" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Номер запиту</th>
+                        <th>Статус</th>
+                        <th>Дата створення заявки</th>
+                        <th>Ім'я замовника</th>
+                        <th>Тип кімнати</th>
+                        <th>Кількість кімнат</th>
+                        <th>Дата прибуття</th>
+                        <th>Кількість днів перебування</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="request : ${requests}" th:object="${request}">
+                        <td>
+                            <a th:href="@{'/admin/edit-booking-request/' + *{id}}">
+                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td th:text="*{id}"></td>
+                        <td th:text="*{status}"></td>
+                        <td th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="*{customer.name}"></td>
+                        <td th:text="*{preferences.roomType}"></td>
+                        <td th:text="*{preferences.hotelRoomAmount}"></td>
+                        <td th:text="*{#temporals.format(arriveDate, 'dd-MM-yyyy')}"></td>
+                        <td th:text="*{tenure}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--end main-->
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/js/vendor/jquery.min.js"><\/script>')</script>
+<script th:src="@{/js/bootstrap.min.js}" src="../../static/js/bootstrap.min.js"></script>
+</body>
+</html>

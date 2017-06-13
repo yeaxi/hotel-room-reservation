@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: dev, security
   thymeleaf:
     mode: LEGACYHTML5
     cache: false
@@ -14,7 +14,9 @@ spring:
 logging:
   level: info
 
-
+---
+spring:
+  profiles: no-security
 security:
   basic:
     enabled: false

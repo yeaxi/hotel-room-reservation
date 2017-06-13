@@ -47,6 +47,10 @@ public class BookingRequest {
         return this.status.equals(RequestStatus.APPROVED);
     }
 
+    public void deny() {
+        this.status = RequestStatus.DENIED;
+    }
+
     public enum PaymentType {
         CASH, CREDIT_CARD
     }

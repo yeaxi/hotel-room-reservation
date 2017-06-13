@@ -85,7 +85,7 @@
                         <th>Дата створення заявки</th>
                         <th>Ім'я замовника</th>
                         <th>Тип кімнати</th>
-                        <th>Кількість кімнат</th>
+                        <th>Кількість номерів</th>
                         <th>Дата прибуття</th>
                         <th>Кількість днів перебування</th>
                     </tr>
@@ -93,7 +93,7 @@
                     <tbody>
                     <tr th:each="request : ${requests}" th:object="${request}">
                         <td>
-                            <a th:href="@{'/admin/edit-booking-request/' + *{id}}">
+                            <a th:href="@{'/admin/process-booking-request/' + *{id}}">
                                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                             </a>
                         </td>

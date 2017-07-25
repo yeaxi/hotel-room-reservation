@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Left-nav-menu</title>
+</head>
+<body>
+<div th:fragment="entry" class="col-sm-3 col-md-2 sidebar">
+    <div style="margin-bottom: 60%"></div>
+
+    <ul class="nav nav-sidebar">
+        <li><a href="#" th:href="@{/admin/rooms}">Кімнати</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <li><a href="#" th:href="@{/admin/booking-requests}">Запити на бронювання</a></li>
+    </ul>
+
+</div>
+</body>
+</html>

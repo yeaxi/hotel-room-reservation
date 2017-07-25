@@ -3,16 +3,26 @@ server:
 
 spring:
   profiles:
-    active: dev, security
+    active: dev, no-security
   thymeleaf:
     mode: LEGACYHTML5
     cache: false
-  data:
-    mongodb:
-      database: hotel-room-reservation
 
 logging:
   level: info
+
+---
+spring:
+  profiles: dev
+
+debug: true
+
+---
+spring:
+  profiles: security
+security:
+  basic:
+    enabled: true
 
 ---
 spring:

@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Список кімнат в отелі</title>
+    <title>Запити на бронювання</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css" rel="stylesheet">
@@ -27,14 +27,14 @@
 <body th:inline="text">
 
 <!--header-->
-<div th:replace="/component/header ::entry"></div>
+<div th:replace="/admin/component/header ::entry"></div>
 <!--end-header-->
 
 
 <div class="container-fluid">
     <div class="row">
         <!--left-nav-menu-->
-        <div th:replace="/component/left-nav-menu ::entry"></div>
+        <div th:replace="/admin/component/left-nav-menu ::entry"></div>
         <!--end left-nav-menu-->
 
         <!--main-->
@@ -59,50 +59,52 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li><a th:href="@{/}">Всі кімнати</a></li>
+                            <li><a th:href="@{/admin/booking-requests}">Всі запити</a></li>
                         </ul>
                         <ul class="nav navbar-nav">
-                            <li><a th:href="@{/?status=FREE}">Тільки вільні</a></li>
+                            <li><a th:href="@{/admin/booking-requests?status=CREATED}">Тільки створені</a></li>
                         </ul>
-                        <form th:action="@{/find-room}" method="post" class="navbar-form navbar-left">
-                            <div class="form-group">
-                                <input type="number" name="number" class="form-control" placeholder="Номер кімнати">
-                            </div>
-                            <button type="submit" class="btn btn-default">Знайти</button>
-                        </form>
-                        <a th:href="@{/}"><span class="glyphicon glyphicon-remove"></span></a>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a th:href="@{/create-booking-request}">
-                                    Створити запит на бронювання
-                                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-                                </a>
-                            </li>
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests?status=APPROVED}">Тільки підтверджені</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/admin/booking-requests?status=DENIED}">Тільки відхилені</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>
 
-            <h2 class="sub-header">Кімнати</h2>
+            <h2 class="sub-header">Запити на бронювання</h2>
             <div class="table-responsive">
-                <div th:if="${error}">Кімнату з введеним номером не знайдено!</div>
                 <table id="transactions_table" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Номер кімнати</th>
+                        <th></th>
+                        <th>Номер запиту</th>
                         <th>Статус</th>
-                        <th>Кількість кімнат у номері</th>
-                        <th>Вартість за ніч (грн)</th>
-                        <th>Опис</th>
+                        <th>Дата створення заявки</th>
+                        <th>Ім'я замовника</th>
+                        <th>Тип кімнати</th>
+                        <th>Кількість номерів</th>
+                        <th>Дата прибуття</th>
+                        <th>Кількість днів перебування</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="room : ${rooms}" th:object="${room}">
-                        <td th:text="*{number}"></td>
+                    <tr th:each="request : ${requests}" th:object="${request}">
+                        <td>
+                            <a th:href="@{'/admin/process-booking-request/' + *{id}}">
+                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                            </a>
+                        </td>
+                        <td th:text="*{id}"></td>
                         <td th:text="*{status}"></td>
-                        <td th:text="*{roomAmount}"></td>
-                        <td th:text="*{price}"></td>
-                        <td th:text="*{description}"></td>
+                        <td th:text="*{#temporals.format(creationDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="*{customer.name}"></td>
+                        <td th:text="*{preferences.roomType}"></td>
+                        <td th:text="*{preferences.hotelRoomAmount}"></td>
+                        <td th:text="*{#temporals.format(arriveDate, 'dd-MM-yyyy')}"></td>
+                        <td th:text="*{tenure}"></td>
                     </tr>
                     </tbody>
                 </table>
